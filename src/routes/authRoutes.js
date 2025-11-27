@@ -6,7 +6,7 @@ const Tutor = require('../models/Tutor');
 
 const SECRET = process.env.JWT_SECRET || 'segredo123';
 
-// Simple register/login using Tutor table (for demo)
+
 router.post('/register', async (req, res) => {
   const { cpf, nome, email, password } = req.body;
   if (!cpf || !nome || !email || !password) return res.status(400).json({ error: 'dados incompletos' });
@@ -22,7 +22,7 @@ router.post('/login', async (req, res) => {
   if (!cpf || !password) return res.status(400).json({ error: 'cpf e senha necessários' });
   const tutor = await Tutor.findByPk(cpf);
   if (!tutor) return res.status(401).json({ error: 'tutor não encontrado' });
-  // Tutor.password may be undefined if created without password; handle gracefully
+  
   if (!tutor.password) return res.status(401).json({ error: 'sem senha registrada' });
   const ok = bcrypt.compareSync(password, tutor.password);
   if (!ok) return res.status(401).json({ error: 'senha inválida' });

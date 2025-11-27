@@ -7,7 +7,7 @@ const Altura = require('../models/Altura');
 
 const SECRET = process.env.JWT_SECRET || 'segredo123';
 
-// auth middleware
+
 function authMiddleware(req, res, next){
   const h = req.headers.authorization;
   if (!h) return res.status(401).json({ error: 'token requerido' });
@@ -22,7 +22,7 @@ async function resolveAlturaId(altura_cm){
   return 3;
 }
 
-// create pet (protected)
+
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { nome_pet, genero_pet, altura_cm, tutorCpf } = req.body;
@@ -35,20 +35,20 @@ router.post('/', authMiddleware, async (req, res) => {
   } catch (err) { console.error(err); res.status(500).json({ error: 'erro' }); }
 });
 
-// list all
+
 router.get('/', async (req, res) => {
   const pets = await Pet.findAll({ include: [{ model: Altura }, { model: Tutor }] });
   res.json(pets);
 });
 
-// get by codigo_pet
+
 router.get('/:id', async (req, res) => {
   const pet = await Pet.findByPk(req.params.id, { include: [Altura, Tutor] });
   if (!pet) return res.sendStatus(404);
   res.json(pet);
 });
 
-// update (re-resolve altura if altura_cm provided)
+
 router.put('/:id', authMiddleware, async (req, res) => {
   const pet = await Pet.findByPk(req.params.id);
   if (!pet) return res.sendStatus(404);
@@ -57,7 +57,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
   res.json(pet);
 });
 
-// delete
+
 router.delete('/:id', authMiddleware, async (req, res) => {
   const pet = await Pet.findByPk(req.params.id);
   if (!pet) return res.sendStatus(404);
@@ -65,13 +65,13 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   res.json({ ok: true });
 });
 
-// pets by tutor
+
 router.get('/by-tutor/:cpf', async (req, res) => {
   const pets = await Pet.findAll({ where: { tutorCpf: req.params.cpf }, include: [Altura] });
   res.json(pets);
 });
 
-// pets by altura
+
 router.get('/by-altura/:altura', async (req, res) => {
   const a = req.params.altura;
   const altura = await Altura.findOne({ where: { altura: a } });

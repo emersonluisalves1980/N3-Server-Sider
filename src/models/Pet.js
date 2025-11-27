@@ -10,7 +10,7 @@ const Pet = sequelize.define('Pet', {
   altura_cm: { type: DataTypes.FLOAT, allowNull: false }
 }, { tableName: 'pet', timestamps: false });
 
-// associations
+
 Tutor.hasMany(Pet, { foreignKey: 'tutorCpf' });
 Pet.belongsTo(Tutor, { foreignKey: 'tutorCpf' });
 
